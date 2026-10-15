@@ -1,0 +1,24 @@
+# Sagara Local Services Marketplace — Kubernetes Namespaces
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: application
+  labels:
+    environment: production
+    app.kubernetes.io/part-of: sagara-services
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: data
+  labels:
+    environment: production
+    app.kubernetes.io/part-of: sagara-services
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    environment: production
+    app.kubernetes.io/part-of: sagara-services

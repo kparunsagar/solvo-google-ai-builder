@@ -1,0 +1,51 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: urbanai-backend
+  labels:
+    cloud.googleapis.com/location: asia-south1
+    app: urbanai
+    competition: google-cloud-ai-builder-cup-2026
+spec:
+  template:
+    metadata:
+      annotations:
+        # Scale to zero when idle = $0.00 cost
+        autoscaling.knative.dev/minScale: '0'
+        autoscaling.knative.dev/maxScale: '10'
+        # Maximum concurrent requests per container instance
+        autoscaling.knative.dev/target: '80'
+        # Startup CPU boost for ultra-fast <150ms cold starts
+        run.googleapis.com/startup-cpu-boost: 'true'
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      containers:
+        - image: gcr.io/myurbandaily-458d0/urbanai-backend:latest
+          ports:
+            - name: http1
+              containerPort: 5000
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: CLOUD_RUN_REGION
+              value: asia-south1
+            - name: PORT
+              value: '5000'
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            periodSeconds: 15
+            timeoutSeconds: 3

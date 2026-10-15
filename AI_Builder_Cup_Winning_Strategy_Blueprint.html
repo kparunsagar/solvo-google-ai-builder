@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Google Cloud AI Builder Cup 2026 - Winning Strategy Blueprint</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 10mm 12mm;
+  }
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    background-color: #ffffff;
+    line-height: 1.4;
+    font-size: 10pt;
+    margin: 0;
+    padding: 0;
+  }
+  .page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+  .avoid-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Header Cover Banner */
+  .cover-header {
+    background: linear-gradient(135deg, #0d47a1 0%, #1a73e8 50%, #4285f4 100%);
+    color: white;
+    padding: 24px 22px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+  }
+  .badge-tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .cover-title {
+    font-size: 20pt;
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.5px;
+  }
+  .cover-subtitle {
+    font-size: 11pt;
+    font-weight: 400;
+    color: #e3f2fd;
+    margin: 0 0 12px 0;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .meta-item {
+    font-size: 9pt;
+  }
+  .meta-label {
+    color: #bbdefb;
+    text-transform: uppercase;
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .meta-val {
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 2px;
+  }
+
+  /* Section Styling */
+  h2 {
+    font-size: 14pt;
+    font-weight: 800;
+    color: #0f172a;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 6px;
+    margin-top: 22px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h2 span.num {
+    background: #1a73e8;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10pt;
+    font-weight: bold;
+  }
+  h3 {
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-top: 14px;
+    margin-bottom: 6px;
+  }
+  p {
+    margin: 0 0 8px 0;
+    color: #334155;
+  }
+
+  /* Alert Callout */
+  .alert-box {
+    border-left: 4px solid #ef4444;
+    background: #fef2f2;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+  }
+  .alert-title {
+    font-weight: 800;
+    color: #b91c1c;
+    font-size: 10pt;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .alert-desc {
+    font-size: 9.5pt;
+    color: #7f1d1d;
+    margin: 0;
+  }
+
+  .highlight-box {
+    border-left: 4px solid #10b981;
+    background: #f0fdf4;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+  }
+  .highlight-title {
+    font-weight: 800;
+    color: #047857;
+    font-size: 10pt;
+    margin-bottom: 4px;
+  }
+  .highlight-desc {
+    font-size: 9.5pt;
+    color: #065f46;
+    margin: 0;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 16px 0;
+    font-size: 9.5pt;
+  }
+  th {
+    background: #f8fafc;
+    color: #334155;
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 2px solid #cbd5e1;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background-color: #f8fafc;
+  }
+
+  /* Pill Statuses */
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 8pt;
+    font-weight: 700;
+  }
+  .pill-green { background: #dcfce7; color: #15803d; }
+  .pill-blue  { background: #dbeafe; color: #1d4ed8; }
+  .pill-purple { background: #f3e8ff; color: #7e22ce; }
+  .pill-amber { background: #fef3c7; color: #b45309; }
+
+  /* Architecture Box */
+  .arch-container {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 12px 0;
+    font-family: monospace;
+    font-size: 8.5pt;
+    line-height: 1.4;
+    color: #0f172a;
+  }
+
+  /* Two Column Cards */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 10px 0;
+  }
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-weight: 700;
+    font-size: 10.5pt;
+    color: #1e293b;
+    margin-bottom: 4px;
+  }
+  .card-desc {
+    font-size: 9pt;
+    color: #64748b;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 8pt;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1: EXECUTIVE BRIEF & COMPETITION OVERVIEW -->
+  <div class="cover-header">
+    <div class="badge-tag">Official Hackathon Winning Strategy</div>
+    <h1 class="cover-title">Google Cloud AI Builder Cup 2026</h1>
+    <div class="cover-subtitle">Complete Architecture, Free Quota Blueprint & Execution Roadmap for the $30,000 Grand Finale</div>
+    
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-label">Project Name</div>
+        <div class="meta-val">MyUrbanDaily (UrbanAI)</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Selected Track</div>
+        <div class="meta-val">Retail & Commerce (Intelligent Exp.)</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Live Deployment</div>
+        <div class="meta-val">myurbandaily.web.app</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Grand Finale</div>
+        <div class="meta-val">Singapore • Dec 4, 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-box avoid-break">
+    <div class="alert-title">⚠️ CRITICAL CLOUD PROVIDER MANDATE: ZERO AZURE USAGE</div>
+    <p class="alert-desc">
+      The <strong>AI Builder Cup 2026</strong> is hosted by <strong>Hack2skill</strong> and sponsored by <strong>Google Cloud</strong>. 
+      Under the official rubric, <strong>40% of the entire score</strong> is strictly evaluated on <em>Technical Merit & GenAI Implementation on Google Cloud</em> (Gemini 1.5, Vertex AI, Firebase, Cloud Run). 
+      Submitting with Microsoft Azure will disqualify the submission or zero out the 40% technical score. 
+      Our application is already 100% natively running on Google Cloud / Firebase!
+    </p>
+  </div>
+
+  <h2><span class="num">1</span> Official Judging Rubric & How UrbanAI Achieves 100/100</h2>
+  <p>The competition is evaluated across 4 core criteria totaling 100%. Here is our winning alignment strategy:</p>
+
+  <table class="avoid-break">
+    <thead>
+      <tr>
+        <th style="width: 25%;">Evaluation Criteria</th>
+        <th style="width: 12%;">Weight</th>
+        <th style="width: 33%;">Judges' Core Requirements</th>
+        <th style="width: 30%;">UrbanAI Winning Implementation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Technical Merit & Gen AI</strong></td>
+        <td><span class="pill pill-blue">40%</span></td>
+        <td>Deep integration of Google Cloud AI (Gemini 1.5, Vertex AI, Firebase, Cloud Run). Working code, not mockups.</td>
+        <td>Multimodal visual appliance diagnostics via Gemini 1.5 Flash + Cloud Biometric KYC face comparison + Real-time Firestore sync.</td>
+      </tr>
+      <tr>
+        <td><strong>Problem Alignment & Impact</strong></td>
+        <td><span class="pill pill-green">25%</span></td>
+        <td>Solving critical real-world challenges with quantifiable market and social value.</td>
+        <td>Eliminates gig impersonation fraud, out-of-region spoofing (Bangalore vs Sagara guard), and empowers Tier-2/3 semi-urban markets.</td>
+      </tr>
+      <tr>
+        <td><strong>Innovation & Creativity</strong></td>
+        <td><span class="pill pill-purple">25%</span></td>
+        <td>Novel, original mechanisms that differentiate from existing market offerings.</td>
+        <td>Mandatory 2-Step Physical Arrival Handshake (<500m geofence) + Private <code>doorstep_audits</code> schema + Real-time SOS audio siren dispatch.</td>
+      </tr>
+      <tr>
+        <td><strong>UX & Solution Design</strong></td>
+        <td><span class="pill pill-amber">10%</span></td>
+        <td>Intuitive, production-ready, accessible, mobile-first responsive design.</td>
+        <td>Live PWA web app, camera stream integration, Kannada/English multilingual toggle, sub-second latency.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2><span class="num">2</span> Google Cloud 100% Free Quota Allowance Table</h2>
+  <p>All enhancements operate entirely within Google's official free quota limits without requiring a credit card or billing upgrade:</p>
+
+  <table class="avoid-break">
+    <thead>
+      <tr>
+        <th>Google Cloud Component</th>
+        <th>Official Free Allowance</th>
+        <th>Our Operational Usage</th>
+        <th>Billing Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Gemini 1.5 Flash (Google AI Studio)</strong></td>
+        <td><strong>15 Requests/Min (RPM)</strong><br>1,500 Requests/Day (RPD)<br>1,000,000 Tokens/Min (TPM)</td>
+        <td>Visual Appliance Fault Detection & KYC Biometric Liveness Comparison (throttled)</td>
+        <td><strong style="color: #15803d;">₹0 / $0 (Free Forever)</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Cloud Firestore (Spark Plan)</strong></td>
+        <td>50,000 Document Reads / Day<br>20,000 Document Writes / Day<br>1 GiB Stored Data</td>
+        <td>Live booking state, GPS telemetry, SOS emergency alerts, and doorstep audit records</td>
+        <td><strong style="color: #15803d;">₹0 / $0 (Free Forever)</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Firebase Hosting CDN</strong></td>
+        <td>10 GB Storage<br>360 MB/day Data Transfer</td>
+        <td>Global edge serving of production React PWA frontend (<code>myurbandaily.web.app</code>)</td>
+        <td><strong style="color: #15803d;">₹0 / $0 (Free Forever)</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Firebase Cloud Storage</strong></td>
+        <td>5 GB Storage<br>1 GB/day Download Transfer</td>
+        <td>Secure encrypted storage for technician KYC IDs and doorstep arrival selfies</td>
+        <td><strong style="color: #15803d;">₹0 / $0 (Free Forever)</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Google Cloud Run (Serverless)</strong></td>
+        <td>2,000,000 Invocations / Month<br>360,000 GB-seconds memory</td>
+        <td>Automated geofencing checks, webhook dispatchers, and masked telephony broker</td>
+        <td><strong style="color: #15803d;">₹0 / $0 (Free Forever)</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <span>MyUrbanDaily • Google Cloud AI Builder Cup 2026 Strategy</span>
+    <span>Page 1 of 3</span>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PAGE 2: ARCHITECTURE & 5 CORE ENHANCEMENTS -->
+  <h2><span class="num">3</span> Complete Google Cloud End-to-End Architecture</h2>
+  
+  <div class="arch-container avoid-break">
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                            CLIENT TIER (Firebase Hosting Global CDN)                        │
+│   • Customer PWA (Mobile Web)    • Technician Duty App    • Admin Mission Control (/admin) │
+└──────────────────────────────────────────────┬──────────────────────────────────────────────┘
+                                               │
+                                               ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         GOOGLE CLOUD INFRASTRUCTURE & REAL-TIME SYNC                        │
+│   • Cloud Firestore: Real-time NoSQL (collections: bookings, doorstep_audits, sos_alerts)   │
+│   • Firebase Cloud Storage: KYC IDs, Live Doorstep Selfies, Stamped Geolocation Photos      │
+│   • Firebase Authentication: Google SSO & Phone OTP Handshake                               │
+└───────────────────────┬──────────────────────────────────────────────┬──────────────────────┘
+                        │                                              │
+                        ▼                                              ▼
+┌───────────────────────────────────────────────┐ ┌───────────────────────────────────────────┐
+│     GOOGLE CLOUD GEN AI & MULTIMODAL TIER     │ │     FIELD OPERATIONS & TRUST ENGINE       │
+│  • Gemini 1.5 Flash: Visual Appliance Diag    │ │  • GPS Geofence Guard (&lt; 25km radius)    │
+│  • Gemini 1.5 Pro: Biometric KYC Face Match   │ │  • Step 1 Physical Arrival Handshake      │
+│  • Gemini Live: Kannada/Hindi/English Voice   │ │  • Real-Time SOS Dispatch (112 Alert)     │
+└───────────────────────────────────────────────┘ └───────────────────────────────────────────┘
+  </div>
+
+  <h2><span class="num">4</span> The 5 Strategic Enhancements to Implement</h2>
+
+  <div class="grid-2 avoid-break">
+    <div class="card">
+      <div class="card-title">1. Multimodal Appliance Diagnostic & Quoter</div>
+      <p class="card-desc">
+        <strong>Feature:</strong> Customer snaps a photo of their broken appliance (water purifier, pump motor, AC).<br>
+        <strong>Google AI:</strong> <code>gemini-1.5-flash</code> analyzes the image via structured JSON schema.<br>
+        <strong>Output:</strong> Detected defect, severity level (LOW/MED/HIGH), necessary spare parts, and upfront fixed price.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Gemini Biometric KYC Anti-Spoofing</div>
+      <p class="card-desc">
+        <strong>Feature:</strong> Dual-stage facial verification at the customer's doorstep.<br>
+        <strong>Edge Layer:</strong> Instant HTML5 canvas face detection (0ms).<br>
+        <strong>Google AI:</strong> Gemini 1.5 Flash compares the live selfie against the government KYC ID, generating a 90%+ match confidence and spoof flag for the Admin Audit.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Indic Multilingual Voice AI Assistant</div>
+      <p class="card-desc">
+        <strong>Feature:</strong> Microphone button on search & booking bar.<br>
+        <strong>Languages:</strong> Kannada (ಕನ್ನಡ), Hindi, English.<br>
+        <strong>Google AI:</strong> Voice-to-intent parsing extracts the appliance issue, urgency, and address, pre-populating the booking in 1 tap for elderly/rural users.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Proximity & Pool Isolation Guard</div>
+      <p class="card-desc">
+        <strong>Feature:</strong> Strictly enforces a 25km geofence.<br>
+        <strong>Fraud Block:</strong> A technician in Bangalore cannot see, accept, or finish jobs in Sagara.<br>
+        <strong>Pool Isolation:</strong> Once a job is accepted, public pool jobs are hidden until the job is completed or cancelled.
+      </p>
+    </div>
+  </div>
+
+  <div class="card avoid-break" style="margin-top: 8px;">
+    <div class="card-title">5. Admin Mission Control, Doorstep Audits & SOS Emergency Center</div>
+    <p class="card-desc">
+      <strong>Customer Privacy vs Admin Audit:</strong> Customers only see verified technician badges; raw site photos and selfies are securely routed to the private <code>doorstep_audits</code> collection.<br>
+      <strong>SOS Siren:</strong> Real-time audio siren in <code>/admin</code> with instant 112 emergency dialing and customer/technician telephony routing.
+    </p>
+  </div>
+
+  <h2><span class="num">5</span> Step-by-Step Implementation Roadmap</h2>
+  <ol style="font-size: 9.5pt; color: #334155; padding-left: 20px; line-height: 1.6;">
+    <li><strong>Step 1: Free Gemini API Key Setup</strong> — Acquire free API key from <code>aistudio.google.com</code> and add <code>VITE_GEMINI_API_KEY</code> to <code>frontend/.env</code>.</li>
+    <li><strong>Step 2: Create Resilient <code>gemini.ts</code> Engine</strong> — Build rate-limited client-side wrapper calling <code>gemini-1.5-flash</code> with structured JSON outputs and offline fallback.</li>
+    <li><strong>Step 3: Integrate Visual Diagnostic into Customer Booking</strong> — Add photo upload trigger with real-time AI fault breakdown and transparent parts pricing.</li>
+    <li><strong>Step 4: Connect Live Selfie to Gemini Biometric Face Match</strong> — Perform multimodal similarity comparison during technician doorstep arrival and record into Firestore <code>doorstep_audits</code>.</li>
+    <li><strong>Step 5: Voice Assistant (Web Speech + Gemini Intent)</strong> — Enable 1-tap Kannada/English voice intake on search bar.</li>
+    <li><strong>Step 6: Automated Vitest Test Suite Execution</strong> — Verify that all 18+ test suites pass with 100% coverage.</li>
+    <li><strong>Step 7: Production Build & Firebase Hosting Deploy</strong> — Run <code>npm run build</code> and <code>npx firebase deploy --only hosting:myurbandaily</code>.</li>
+  </ol>
+
+  <div class="footer">
+    <span>MyUrbanDaily • Google Cloud AI Builder Cup 2026 Strategy</span>
+    <span>Page 2 of 3</span>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PAGE 3: PITCH DECK STRUCTURE & DEMO VIDEO SCRIPT -->
+  <h2><span class="num">6</span> Winning 10-Slide Pitch Deck Blueprint</h2>
+  <p>Judges evaluate the pitch deck (PDF) on problem alignment, scalability, and technical elegance:</p>
+
+  <table class="avoid-break">
+    <thead>
+      <tr>
+        <th style="width: 12%;">Slide #</th>
+        <th style="width: 28%;">Slide Title</th>
+        <th style="width: 60%;">Key Content & Winning Visual Hook</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Slide 1</strong></td>
+        <td><strong>UrbanAI: The 360° Trusted Gig Economy</strong></td>
+        <td>Vision statement: Transforming hyperlocal services in Tier-2/Tier-3 emerging markets with Google Cloud GenAI.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 2</strong></td>
+        <td><strong>The Field Service Trust Deficit</strong></td>
+        <td>The 3 critical failures: Impersonation fraud, out-of-region dispatch failures (Bangalore vs Sagara), and opaque pricing.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 3</strong></td>
+        <td><strong>Our Solution: 4 Pillars of AI Trust</strong></td>
+        <td>Multimodal Visual Diagnostics + 25km Geofenced Radar + Biometric KYC Face Match + Real-time SOS Dispatch.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 4</strong></td>
+        <td><strong>Google Cloud Architecture</strong></td>
+        <td>High-res system diagram highlighting Firebase Hosting, Cloud Firestore, Gemini 1.5 Flash, and Cloud Run.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 5</strong></td>
+        <td><strong>Multimodal Visual Diagnostics</strong></td>
+        <td>Screenshot: Customer uploads photo of leaking water purifier &rarr; Gemini outputs fault, parts, and transparent ₹350 quote.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 6</strong></td>
+        <td><strong>Doorstep Verification & Biometric KYC</strong></td>
+        <td>Mandatory Step 1 Physical Arrival (<500m) + Gemini 1.5 Pro face comparison (Aadhaar KYC vs Live Selfie) + 4-digit OTP.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 7</strong></td>
+        <td><strong>Tier-2 & Tier-3 Market Inclusivity</strong></td>
+        <td>Sagara, Hosanagara, Honnali operational hubs; Kannada/Hindi voice booking empowering elderly and rural customers.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 8</strong></td>
+        <td><strong>Business Model & Unit Economics</strong></td>
+        <td>10% platform commission + transparent catalog markups + digital warranty certificate upsells.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 9</strong></td>
+        <td><strong>Live Traction & Production Readiness</strong></td>
+        <td>Deployed live at <code>myurbandaily.web.app</code>, 18 automated test suites passing, real-time Firestore synchronization.</td>
+      </tr>
+      <tr>
+        <td><strong>Slide 10</strong></td>
+        <td><strong>The Team & Scaling Vision</strong></td>
+        <td>Engineering pedigree, expansion plan across Karnataka & pan-India semi-urban clusters.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2><span class="num">7</span> Official 3-Minute Video Demo Script</h2>
+
+  <table class="avoid-break">
+    <thead>
+      <tr>
+        <th style="width: 15%;">Timestamp</th>
+        <th style="width: 25%;">Screen Action</th>
+        <th style="width: 60%;">Spoken Narration (Script)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>0:00 - 0:35</strong></td>
+        <td>Show Sagara Map & Problem Slide</td>
+        <td><em>"In India's emerging towns, booking a home service is plagued by fraud: fake technicians arrive, contractors in distant cities take jobs they cannot fulfill, and pricing is completely opaque. Meet UrbanAI, powered by Google Cloud."</em></td>
+      </tr>
+      <tr>
+        <td><strong>0:35 - 1:15</strong></td>
+        <td>Customer App: Snap photo of faulty appliance</td>
+        <td><em>"A customer in Sagara snaps a photo of their leaking water purifier. Gemini 1.5 Flash instantly inspects the image, diagnoses the faulty membrane, lists replacement parts, and gives a fixed, transparent estimate. No hidden fees."</em></td>
+      </tr>
+      <tr>
+        <td><strong>1:15 - 1:55</strong></td>
+        <td>Technician App: Proximity radar & Step 1 Arrival</td>
+        <td><em>"Our Google Cloud geofence guarantees that only verified technicians within 25km can see the job. Upon arriving within 500m, Step 1 triggers automatically, sending an instant arrival alert to the customer's phone."</em></td>
+      </tr>
+      <tr>
+        <td><strong>1:55 - 2:35</strong></td>
+        <td>Doorstep Selfie & Biometric KYC Face Match</td>
+        <td><em>"Before entering the home, the technician takes a live selfie. Gemini 1.5 Pro performs facial biometric matching against their government KYC ID, verifying liveness and blocking spoofing. The customer shares their 4-digit OTP to start the job."</em></td>
+      </tr>
+      <tr>
+        <td><strong>2:35 - 3:00</strong></td>
+        <td>Admin Mission Control & SOS Emergency Siren</td>
+        <td><em>"In Admin Mission Control, dispatchers monitor real-time audit logs and live SOS alerts with one-click 112 emergency routing. UrbanAI: Built on Google Cloud, empowering the next billion users."</em></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box avoid-break">
+    <div class="highlight-title">🎯 HACKATHON SUBMISSION CHECKLIST</div>
+    <p class="highlight-desc">
+      ✅ <strong>Live Web App URL:</strong> <code>https://myurbandaily.web.app</code> (Deployed)<br>
+      ✅ <strong>GitHub Repository:</strong> <code>https://github.com/kparunsagar/urbanai</code> (18 Test Suites Passing)<br>
+      ✅ <strong>Target Track:</strong> Retail & Commerce: Intelligent Customer and Business Experiences<br>
+      ✅ <strong>Deadline:</strong> Prototype Submission: October 18, 2026 | Grand Finale in Singapore: December 4, 2026
+    </p>
+  </div>
+
+  <div class="footer">
+    <span>MyUrbanDaily • Google Cloud AI Builder Cup 2026 Strategy</span>
+    <span>Page 3 of 3</span>
+  </div>
+
+</body>
+</html>

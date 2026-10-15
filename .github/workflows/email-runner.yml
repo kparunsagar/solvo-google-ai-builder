@@ -1,0 +1,56 @@
+name: MyUrbanDaily Real-Time Email Dispatcher & Registration Syncer
+
+on:
+  schedule:
+    # Run every 20 minutes automatically on GitHub runner
+    - cron: '*/20 * * * *'
+  workflow_dispatch:
+    inputs:
+      trigger_reason:
+        description: 'Reason for running email dispatcher'
+        required: false
+        default: 'Manual on-demand sync'
+  repository_dispatch:
+    types:
+      - new_user_registered
+      - trigger_email_sweep
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: email-cloud-dispatcher
+  cancel-in-progress: false
+
+jobs:
+  dispatch-emails:
+    name: Cloud Runner RFC 5322 Email Dispatcher & Real-Time Listener
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install Dependencies
+        run: |
+          npm --prefix backend install
+          npm --prefix frontend install --omit=dev
+
+      - name: Execute Cloud Email Dispatcher (Sweep + Real-Time Watcher)
+        env:
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: 465
+          SMTP_USER: ${{ secrets.SMTP_USER || 'urbanaiidea@gmail.com' }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS || 'aajd hdld altp ekuu' }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY || 'QUl6YVN5Q0JzSkNvb3JmUWhoOWJ3TncwTnJyeE00YzluYXRfRVN3' }}
+          WATCH_MODE: 'true'
+          WATCH_TIMEOUT: '1200'
+        run: |
+          node backend/scripts/runner_email_dispatcher.cjs --watch --timeout 1200

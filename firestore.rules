@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // 1. Public catalog (Read-only for public, authenticated writes)
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // 2. User Profiles, Workbook, and People Data
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if true; // Profile self-registration & updates
+    }
+
+    match /user_workbook/{docId} {
+      allow read, write: if true;
+    }
+
+    match /peopledata/{docId} {
+      allow read, write: if true;
+
+      // Customer Digital Receipts Sub-Collection
+      match /receipts/{receiptId} {
+        allow read: if true; // Allows viewing & printing customer warranty receipts
+        allow write: if true;
+      }
+    }
+
+    // Global receipts mirror
+    match /receipts/{receiptId} {
+      allow read, write: if true;
+    }
+
+    // 3. Bookings Lifecycle
+    match /bookings/{bookingId} {
+      allow read: if true;
+      allow create: if request.resource.data.customer_phone != null || request.resource.data.service_id != null;
+      allow update: if true;
+      allow delete: if false; // Immutability guarantee: bookings are archived, never deleted
+    }
+
+    // 4. Technician KYC Queue
+    match /kyc_queue/{docId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+    }
+
+    // 5. Customer & Provider Support Tickets
+    match /support_tickets/{ticketId} {
+      allow read, write: if true;
+
+      match /messages/{messageId} {
+        allow read, write: if true;
+      }
+    }
+
+    // 6. Audit Logs & Revenue Integrity (Immutable Ledger)
+    match /audit_logs/{logId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false; // Strict audit trail: append-only
+    }
+
+    // 7. Verified Customer Reviews
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.resource.data.rating >= 1 && request.resource.data.rating <= 5;
+      allow update, delete: if false; // Reviews cannot be altered or removed after submission
+    }
+
+    // 8. Waitlist, Push & Email Notifications
+    match /expansion_waitlist/{docId} {
+      allow read, write: if true;
+    }
+
+    match /email_notifications/{docId} {
+      allow read, write: if true;
+    }
+
+    match /mail/{docId} {
+      allow read, write: if true;
+    }
+
+    match /notifications/{notificationId} {
+      allow read, write: if true;
+    }
+
+    // 9. Doorstep Audits & Arrival Biometric Verifications
+    match /doorstep_audits/{auditId} {
+      allow read, write: if true;
+    }
+
+    // 10. Real-time Emergency SOS Alerts
+    match /sos_alerts/{alertId} {
+      allow read, write: if true;
+    }
+  }
+}

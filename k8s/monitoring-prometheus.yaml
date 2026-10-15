@@ -1,0 +1,48 @@
+# ZONE 7 — OBSERVABILITY, SECURITY & BACKUP (Namespace: monitoring)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sagara-backend-monitor
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  namespaceSelector:
+    matchNames:
+      - application
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: sagara-marketplace-alerts
+  namespace: monitoring
+  labels:
+    role: alert-rules
+spec:
+  groups:
+    - name: sagara.alerts
+      rules:
+        - alert: HighUnassignedBookings
+          expr: sagara_active_bookings > 20
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: High unassigned booking queue in Sagara
+            description: "Over 20 bookings are waiting for providers in Sagara taluk."
+
+        - alert: LowOnlineTechnicians
+          expr: sagara_online_providers < 2
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: Critical technician shortage in Sagara
+            description: "Fewer than 2 technicians are online in Sagara."

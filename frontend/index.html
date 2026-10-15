@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function() {
+        var h = window.location.hostname;
+        if (h === 'myurbandaily.web.app' || h === 'myurbandaily-458d0.web.app' || h === 'myurbandaily.firebaseapp.com' || h === 'myurbandaily-458d0.firebaseapp.com') {
+          window.location.replace('https://solvo.web.app' + window.location.pathname + window.location.search + window.location.hash);
+        }
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>SOLVO — Instant Doorstep Home Services & Repairs</title>
+    <meta name="description" content="SOLVO — The global on-demand doorstep home repair and technician platform. Plumbing, electrical, cleaning, appliance repair, and verified master technicians at your door." />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- PWA -->
+    <link rel="icon" type="image/jpeg" href="/solvo-logo.jpg" />
+    <link rel="apple-touch-icon" href="/solvo-logo.jpg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <!-- OG -->
+    <meta property="og:title" content="SOLVO — Instant Home Services & Repairs" />
+    <meta property="og:description" content="Book verified plumbers, electricians, AC technicians with 30-day rework warranty." />
+    <meta property="og:image" content="/solvo-logo.jpg" />
+    <meta property="og:type" content="website" />
+
+    <!-- Security & Cache Control -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://*.razorpay.com https://apis.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' https: data: blob: https://*.razorpay.com https://firebasestorage.googleapis.com https://lh3.googleusercontent.com https://api.qrserver.com; connect-src 'self' https: wss: https://*.razorpay.com https://api.razorpay.com https://lumberjack.razorpay.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://firebasestorage.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; frame-src 'self' https://checkout.razorpay.com https://api.razorpay.com https://*.razorpay.com https://solvo.firebaseapp.com https://solvo.web.app https://myurbandaily.firebaseapp.com https://myurbandaily.web.app https://myurbandaily-458d0.firebaseapp.com https://www.openstreetmap.org https://www.google.com https://maps.google.com;" />
+    <!-- Preload Razorpay Standard Checkout SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MyUrbanDaily</string>
+    <string name="title_activity_main">MyUrbanDaily</string>
+    <string name="package_name">com.myurbandaily.app</string>
+    <string name="custom_url_scheme">com.myurbandaily.app</string>
+</resources>

@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+
+  # ── 1. Auth Microservice (Python FastAPI) ────────────────────────────────
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    container_name: mud-auth-service
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://mud_user:mud_password@postgres:5432/mud_db
+      - REDIS_URL=redis://:mud_redis_secret@redis:6379/0
+      - JWT_SECRET=${JWT_SECRET:-mud_jwt_secret_change_in_prod}
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - mud-network
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ── 2. Booking + Catalog Microservice (Python FastAPI) ──────────────────
+  booking-service:
+    build:
+      context: ./services/booking-service
+      dockerfile: Dockerfile
+    container_name: mud-booking-service
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - BOOKING_DATABASE_URL=postgresql+asyncpg://mud_user:mud_password@postgres:5432/mud_booking_db
+      - REDIS_URL=redis://:mud_redis_secret@redis:6379/1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - mud-network
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ── 3. Tracking Service (existing Python) ───────────────────────────────
+  tracking-service:
+    build:
+      context: ./services/tracking-service
+      dockerfile: Dockerfile
+    container_name: mud-tracking-service
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    environment:
+      - PORT=8002
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-myurbandaily-458d0}
+    networks:
+      - mud-network
+
+  # ── 4. React Frontend (Vite + Nginx) ────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mud-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+      - booking-service
+    networks:
+      - mud-network
+
+  # ── Data Layer ───────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: mud-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mud_user
+      POSTGRES_PASSWORD: mud_password
+      POSTGRES_MULTIPLE_DATABASES: mud_db,mud_booking_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./shared/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh
+    networks:
+      - mud-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mud_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: mud-redis
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "mud_redis_secret", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - mud-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "mud_redis_secret", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  mud-network:
+    driver: bridge

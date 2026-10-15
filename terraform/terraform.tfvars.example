@@ -1,0 +1,8 @@
+# Example Terraform Variables for Urban Daily
+project_id      = "myurbandaily-458d0"
+region          = "asia-south1"
+service_name    = "urbanai-backend"
+repository_name = "urbanai-docker-repo"
+environment     = "production"
+container_image = "asia-south1-docker.pkg.dev/myurbandaily-458d0/urbanai-docker-repo/backend:latest"
+gemini_api_key  = ""

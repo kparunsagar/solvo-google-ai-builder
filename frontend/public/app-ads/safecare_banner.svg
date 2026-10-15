@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="50%" stop-color="#1e40af"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="300" rx="24" fill="url(#bg)"/>
+  <circle cx="500" cy="80" r="140" fill="#3b82f6" opacity="0.15"/>
+  <circle cx="540" cy="220" r="90" fill="#60a5fa" opacity="0.1"/>
+  
+  <!-- Shield Icon -->
+  <g transform="translate(440, 70)">
+    <path d="M50 10 L90 28 V75 C90 115 50 140 50 140 C50 140 10 115 10 75 V28 Z" fill="url(#shieldGrad)" opacity="0.9"/>
+    <path d="M38 72 L47 81 L65 58" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  
+  <!-- Text elements -->
+  <rect x="40" y="40" width="160" height="28" rx="14" fill="#3b82f6" fill-opacity="0.3"/>
+  <text x="50" y="59" font-family="system-ui, sans-serif" font-size="12" font-weight="800" fill="#93c5fd" letter-spacing="1">SAFECARE AMC</text>
+  
+  <text x="40" y="115" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#ffffff">Zero Repair Bills</text>
+  <text x="40" y="150" font-family="system-ui, sans-serif" font-size="28" font-weight="900" fill="#60a5fa">For 1 Full Year</text>
+  
+  <text x="40" y="190" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#cbd5e1">Unlimited free doorstep checkups for electrical &amp; plumbing</text>
+  <text x="40" y="215" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#fbbf24">✓ Starting at ₹99/mo • Free replacement parts up to ₹5,000</text>
+  
+  <!-- Pill CTA -->
+  <rect x="40" y="240" width="170" height="36" rx="18" fill="#ffffff"/>
+  <text x="65" y="263" font-family="system-ui, sans-serif" font-size="13" font-weight="800" fill="#0f172a">EXPLORE PLAN →</text>
+</svg>

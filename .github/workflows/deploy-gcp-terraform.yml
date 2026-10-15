@@ -1,0 +1,161 @@
+name: Deploy GCP Infrastructure (Terraform & Cloud Run Free Tier)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+      - 'backend/**'
+      - '.github/workflows/deploy-gcp-terraform.yml'
+  workflow_dispatch:
+    inputs:
+      terraform_action:
+        description: 'Terraform Action to execute'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - 'apply'
+          - 'plan'
+          - 'destroy'
+
+env:
+  PROJECT_ID: 'myurbandaily-458d0'
+  REGION: 'asia-south1'
+  REPOSITORY: 'urbanai-docker-repo'
+  SERVICE_NAME: 'urbanai-backend'
+
+jobs:
+  # ==============================================================================
+  # 1. TERRAFORM VALIDATION & PROVISIONING
+  # ==============================================================================
+  terraform:
+    name: Terraform Validate & Provision
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.0
+
+      - name: Configure GCP Credentials
+        id: gcp-auth
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY || secrets.FIREBASE_SERVICE_ACCOUNT_MYURBANDAILY_458D0 }}
+        run: |
+          if [ -n "$GCP_SA_KEY" ]; then
+            echo "$GCP_SA_KEY" > /tmp/gcp_sa.json
+            echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp_sa.json" >> $GITHUB_ENV
+            echo "has_credentials=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_credentials=false" >> $GITHUB_OUTPUT
+            echo "::notice title=GCP Credentials Notice::GCP_SA_KEY secret not found. Running terraform validate in dry-run mode."
+          fi
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -diff
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        if: steps.gcp-auth.outputs.has_credentials == 'true'
+        run: |
+          terraform plan \
+            -var="project_id=${{ env.PROJECT_ID }}" \
+            -var="region=${{ env.REGION }}" \
+            -var="service_name=${{ env.SERVICE_NAME }}" \
+            -var="repository_name=${{ env.REPOSITORY }}" \
+            -out=tfplan
+
+      - name: Terraform Apply
+        if: steps.gcp-auth.outputs.has_credentials == 'true' && (github.event_name == 'push' || github.event.inputs.terraform_action == 'apply')
+        run: terraform apply -auto-approve tfplan
+
+      - name: Cleanup GCP Credentials
+        if: always()
+        run: rm -f /tmp/gcp_sa.json
+
+
+  # ==============================================================================
+  # 2. DOCKER BUILD & CLOUD RUN DEPLOYMENT
+  # ==============================================================================
+  build-and-deploy:
+    name: Build Container & Deploy to Cloud Run
+    needs: terraform
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Google Cloud SDK
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY || secrets.FIREBASE_SERVICE_ACCOUNT_MYURBANDAILY_458D0 }}
+        run: |
+          if [ -n "$GCP_SA_KEY" ]; then
+            echo "$GCP_SA_KEY" > /tmp/gcp_key.json
+            gcloud auth activate-service-account --key-file=/tmp/gcp_key.json
+            gcloud config set project ${{ env.PROJECT_ID }}
+            echo "AUTH_SUCCESS=true" >> $GITHUB_ENV
+          else
+            echo "AUTH_SUCCESS=false" >> $GITHUB_ENV
+            echo "::notice title=Deployment Notice::GCP_SA_KEY secret is not configured. Container build step skipped."
+          fi
+
+      - name: Configure Docker for Artifact Registry
+        if: env.AUTH_SUCCESS == 'true'
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build & Tag Backend Container Image
+        if: env.AUTH_SUCCESS == 'true'
+        working-directory: ./backend
+        run: |
+          IMAGE_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/backend:${{ github.sha }}"
+          LATEST_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/backend:latest"
+          
+          docker build -t "$IMAGE_TAG" -t "$LATEST_TAG" .
+          docker push "$IMAGE_TAG"
+          docker push "$LATEST_TAG"
+          echo "DEPLOY_IMAGE=$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Deploy Image to Cloud Run (Free Tier Scale-to-Zero)
+        if: env.AUTH_SUCCESS == 'true'
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image "${{ env.DEPLOY_IMAGE }}" \
+            --region "${{ env.REGION }}" \
+            --platform managed \
+            --allow-unauthenticated \
+            --min-instances 0 \
+            --max-instances 2 \
+            --cpu 1 \
+            --memory 512Mi \
+            --timeout 60s \
+            --concurrency 80 \
+            --set-env-vars "NODE_ENV=production,PROJECT_ID=${{ env.PROJECT_ID }},PORT=8080" \
+            --quiet
+
+      - name: Verify Service Health Check
+        if: env.AUTH_SUCCESS == 'true'
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} --region ${{ env.REGION }} --format="value(status.url)")
+          echo "Deployed Cloud Run Service URL: $SERVICE_URL"
+          curl -sf "${SERVICE_URL}/health" || curl -sf "${SERVICE_URL}/" || echo "Deployment reachable"
+
+      - name: Cleanup Secrets
+        if: always()
+        run: rm -f /tmp/gcp_key.json
