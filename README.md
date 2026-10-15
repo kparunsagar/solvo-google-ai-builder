@@ -159,7 +159,6 @@ docker-compose up --build -d
 
 ## 🛡️ Intellectual Property & Repository Scope
 
-> **Notice to Reviewers and Evaluators**:  
 > This repository is a curated public showcase containing the client application, UI components, interactive dispatch simulators, and architecture documentation. Proprietary business logic, private algorithmic models, database credentials, and production secrets are maintained in private enterprise repositories and protected by automated CI/CD security scanning.
 
 ---
